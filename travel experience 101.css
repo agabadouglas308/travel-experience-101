@@ -1,0 +1,814 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>World's Most Beautiful Destinations</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Montserrat', sans-serif;
+        }
+        
+        body {
+            background-color: #f5f5f5;
+            color: #333;
+        }
+        
+        header {
+            background-image: linear-gradient(rgba(0, 0, 0, 0.6), rgba(0, 0, 0, 0.6)), url('/api/placeholder/1200/600');
+            background-size: cover;
+            background-position: center;
+            height: 60vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+            color: white;
+            padding: 2rem;
+        }
+        
+        header h1 {
+            font-size: 3rem;
+            margin-bottom: 1rem;
+            font-weight: 700;
+        }
+        
+        header p {
+            font-size: 1.2rem;
+            max-width: 700px;
+        }
+        
+        nav {
+            background-color: #fff;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+            padding: 1.5rem;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+        
+        nav ul {
+            display: flex;
+            justify-content: center;
+            list-style: none;
+            gap: 2rem;
+        }
+        
+        nav a {
+            text-decoration: none;
+            color: #333;
+            font-weight: 600;
+            padding: 0.5rem 1rem;
+            border-radius: 4px;
+            transition: all 0.3s ease;
+        }
+        
+        nav a:hover, nav a.active {
+            background-color: #0066cc;
+            color: white;
+        }
+        
+        section {
+            padding: 4rem 2rem;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+        
+        .section-title {
+            text-align: center;
+            margin-bottom: 3rem;
+        }
+        
+        .section-title h2 {
+            font-size: 2.5rem;
+            color: #0066cc;
+            margin-bottom: 1rem;
+        }
+        
+        .section-title p {
+            font-size: 1.1rem;
+            color: #666;
+            max-width: 800px;
+            margin: 0 auto;
+        }
+        
+        .destinations-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 2rem;
+        }
+        
+        .destination-card {
+            background-color: white;
+            border-radius: 8px;
+            overflow: hidden;
+            box-shadow: 0 3px 15px rgba(0, 0, 0, 0.1);
+            transition: transform 0.3s ease;
+        }
+        
+        .destination-card:hover {
+            transform: translateY(-10px);
+        }
+        
+        .card-image {
+            height: 200px;
+            overflow: hidden;
+        }
+        
+        .card-image img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transition: transform 0.5s ease;
+        }
+        
+        .destination-card:hover .card-image img {
+            transform: scale(1.1);
+        }
+        
+        .card-content {
+            padding: 1.5rem;
+        }
+        
+        .card-content h3 {
+            font-size: 1.5rem;
+            margin-bottom: 0.5rem;
+            color: #0066cc;
+        }
+        
+        .card-content p {
+            color: #666;
+            font-size: 0.9rem;
+            margin-bottom: 1rem;
+        }
+        
+        .card-content .location {
+            display: flex;
+            align-items: center;
+            color: #999;
+            font-size: 0.9rem;
+            margin-bottom: 1rem;
+        }
+        
+        .btn {
+            display: inline-block;
+            background-color: #0066cc;
+            color: white;
+            padding: 0.5rem 1.5rem;
+            border-radius: 4px;
+            text-decoration: none;
+            font-weight: 600;
+            transition: background-color 0.3s ease;
+        }
+        
+        .btn:hover {
+            background-color: #0053a6;
+        }
+        
+        #map-section {
+            background-color: #e9f2ff;
+        }
+        
+        .map-container {
+            background-color: white;
+            border-radius: 8px;
+            overflow: hidden;
+            box-shadow: 0 3px 15px rgba(0, 0, 0, 0.1);
+            height: 500px;
+            position: relative;
+        }
+        
+        .map-placeholder {
+            width: 100%;
+            height: 100%;
+            background-color: #d1e6ff;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-size: 1.2rem;
+            color: #0066cc;
+        }
+        
+        .filters {
+            display: flex;
+            justify-content: center;
+            margin-bottom: 2rem;
+            flex-wrap: wrap;
+            gap: 1rem;
+        }
+        
+        .filter-btn {
+            background-color: white;
+            border: 1px solid #ddd;
+            padding: 0.5rem 1.5rem;
+            border-radius: 50px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        
+        .filter-btn:hover, .filter-btn.active {
+            background-color: #0066cc;
+            color: white;
+            border-color: #0066cc;
+        }
+        
+        footer {
+            background-color: #333;
+            color: white;
+            padding: 3rem 2rem;
+            text-align: center;
+        }
+        
+        .footer-content {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: space-between;
+            gap: 2rem;
+        }
+        
+        .footer-logo {
+            font-size: 1.8rem;
+            font-weight: 700;
+            margin-bottom: 1rem;
+            color: #0066cc;
+        }
+        
+        .footer-links h3 {
+            margin-bottom: 1.5rem;
+            font-size: 1.2rem;
+        }
+        
+        .footer-links ul {
+            list-style: none;
+        }
+        
+        .footer-links li {
+            margin-bottom: 0.5rem;
+        }
+        
+        .footer-links a {
+            color: #ddd;
+            text-decoration: none;
+            transition: color 0.3s ease;
+        }
+        
+        .footer-links a:hover {
+            color: #0066cc;
+        }
+        
+        .copyright {
+            margin-top: 2rem;
+            padding-top: 2rem;
+            border-top: 1px solid #555;
+            color: #aaa;
+            font-size: 0.9rem;
+        }
+        
+        /* Social Media Styles */
+        .social-icons {
+            display: flex;
+            justify-content: center;
+            gap: 1rem;
+            margin-top: 1.5rem;
+        }
+        
+        .social-icon {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 40px;
+            height: 40px;
+            background-color: #fff;
+            border-radius: 50%;
+            color: #333;
+            font-size: 1.2rem;
+            text-decoration: none;
+            transition: all 0.3s ease;
+        }
+        
+        .social-icon:hover {
+            transform: translateY(-5px);
+        }
+        
+        .social-icon.facebook:hover {
+            background-color: #3b5998;
+            color: white;
+        }
+        
+        .social-icon.instagram:hover {
+            background: linear-gradient(45deg, #405de6, #5851db, #833ab4, #c13584, #e1306c, #fd1d1d);
+            color: white;
+        }
+        
+        .social-icon.twitter:hover {
+            background-color: #1da1f2;
+            color: white;
+        }
+        
+        .social-icon.youtube:hover {
+            background-color: #ff0000;
+            color: white;
+        }
+        
+        .social-icon.tiktok:hover {
+            background-color: #000000;
+            color: white;
+        }
+        
+        .social-icon.pinterest:hover {
+            background-color: #bd081c;
+            color: white;
+        }
+        
+        #social-media-section {
+            background-color: #f0f8ff;
+        }
+        
+        .social-feed {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+            gap: 1.5rem;
+            margin-top: 2rem;
+        }
+        
+        .social-post {
+            background-color: white;
+            border-radius: 8px;
+            overflow: hidden;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+        }
+        
+        .social-post-image {
+            height: 200px;
+            overflow: hidden;
+        }
+        
+        .social-post-image img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+        
+        .social-post-content {
+            padding: 1rem;
+        }
+        
+        .social-post-header {
+            display: flex;
+            align-items: center;
+            margin-bottom: 0.5rem;
+        }
+        
+        .social-post-platform {
+            font-weight: 600;
+            margin-left: 0.5rem;
+        }
+        
+        .social-post-text {
+            font-size: 0.9rem;
+            color: #555;
+            margin-bottom: 0.5rem;
+        }
+        
+        .social-post-date {
+            font-size: 0.8rem;
+            color: #999;
+        }
+        
+        .header-social {
+            margin-top: 2rem;
+        }
+        
+        .floating-social {
+            position: fixed;
+            top: 50%;
+            right: 0;
+            transform: translateY(-50%);
+            display: flex;
+            flex-direction: column;
+            gap: 0.5rem;
+            background-color: rgba(255, 255, 255, 0.9);
+            padding: 1rem 0.5rem;
+            border-radius: 8px 0 0 8px;
+            box-shadow: -3px 0 10px rgba(0, 0, 0, 0.1);
+            z-index: 99;
+        }
+        
+        .floating-social .social-icon {
+            width: 35px;
+            height: 35px;
+            font-size: 1rem;
+        }
+        
+        @media (max-width: 768px) {
+            header h1 {
+                font-size: 2rem;
+            }
+            
+            nav ul {
+                flex-direction: column;
+                gap: 1rem;
+                align-items: center;
+            }
+            
+            .section-title h2 {
+                font-size: 2rem;
+            }
+            
+            .footer-content {
+                flex-direction: column;
+                align-items: center;
+                text-align: center;
+            }
+            
+            .floating-social {
+                display: none;
+            }
+        }
+    </style>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.2.0/css/all.min.css">
+</head>
+<body>
+    <header>
+        <h1>Explore the World's Most Beautiful Destinations</h1>
+        <p>Discover breathtaking landscapes, ancient wonders, and natural paradises around the globe</p>
+        
+        <div class="social-icons header-social">
+            <a href="https://facebook.com/YourTravelPage" class="social-icon facebook" target="_blank">
+                <i class="fab fa-facebook-f"></i>
+            </a>
+            <a href="https://instagram.com/YourTravelPage" class="social-icon instagram" target="_blank">
+                <i class="fab fa-instagram"></i>
+            </a>
+            <a href="https://twitter.com/YourTravelPage" class="social-icon twitter" target="_blank">
+                <i class="fab fa-twitter"></i>
+            </a>
+            <a href="https://youtube.com/YourTravelChannel" class="social-icon youtube" target="_blank">
+                <i class="fab fa-youtube"></i>
+            </a>
+            <a href="https://tiktok.com/@YourTravelAccount" class="social-icon tiktok" target="_blank">
+                <i class="fab fa-tiktok"></i>
+            </a>
+            <a href="https://pinterest.com/YourTravelPage" class="social-icon pinterest" target="_blank">
+                <i class="fab fa-pinterest-p"></i>
+            </a>
+        </div>
+    </header>
+    
+    <div class="floating-social">
+        <a href="https://facebook.com/YourTravelPage" class="social-icon facebook" target="_blank">
+            <i class="fab fa-facebook-f"></i>
+        </a>
+        <a href="https://instagram.com/YourTravelPage" class="social-icon instagram" target="_blank">
+            <i class="fab fa-instagram"></i>
+        </a>
+        <a href="https://twitter.com/YourTravelPage" class="social-icon twitter" target="_blank">
+            <i class="fab fa-twitter"></i>
+        </a>
+        <a href="https://youtube.com/YourTravelChannel" class="social-icon youtube" target="_blank">
+            <i class="fab fa-youtube"></i>
+        </a>
+        <a href="https://tiktok.com/@YourTravelAccount" class="social-icon tiktok" target="_blank">
+            <i class="fab fa-tiktok"></i>
+        </a>
+    </div>
+    
+    <nav>
+        <ul>
+            <li><a href="#destinations" class="active">Destinations</a></li>
+            <li><a href="#map-section">Interactive Map</a></li>
+            <li><a href="#social-media-section">Social Media</a></li>
+            <li><a href="#about">About</a></li>
+            <li><a href="#contact">Contact</a></li>
+        </ul>
+    </nav>
+    
+    <section id="destinations">
+        <div class="container">
+            <div class="section-title">
+                <h2>Must-Visit Destinations</h2>
+                <p>Explore our curated collection of the world's most stunning locations that should be on every traveler's bucket list</p>
+            </div>
+            
+            <div class="filters">
+                <button class="filter-btn active" data-filter="all">All</button>
+                <button class="filter-btn" data-filter="nature">Nature</button>
+                <button class="filter-btn" data-filter="historical">Historical</button>
+                <button class="filter-btn" data-filter="cultural">Cultural</button>
+                <button class="filter-btn" data-filter="beaches">Beaches</button>
+            </div>
+            
+            <div class="destinations-grid" id="destinations-container">
+                <!-- Destination cards will be dynamically generated -->
+            </div>
+        </div>
+    </section>
+    
+    <section id="map-section">
+        <div class="container">
+            <div class="section-title">
+                <h2>Explore Our Interactive Map</h2>
+                <p>Navigate through our interactive world map to discover beautiful destinations in every corner of the globe</p>
+            </div>
+            
+            <div class="map-container">
+                <div class="map-placeholder">Interactive World Map with Beautiful Destinations</div>
+            </div>
+        </div>
+    </section>
+    
+    <section id="social-media-section">
+        <div class="container">
+            <div class="section-title">
+                <h2>Follow Our Adventures</h2>
+                <p>Connect with us on social media to see our latest travel moments and get inspired for your next journey</p>
+            </div>
+            
+            <div class="social-icons" style="margin-bottom: 2rem;">
+                <a href="https://facebook.com/YourTravelPage" class="social-icon facebook" target="_blank">
+                    <i class="fab fa-facebook-f"></i>
+                </a>
+                <a href="https://instagram.com/YourTravelPage" class="social-icon instagram" target="_blank">
+                    <i class="fab fa-instagram"></i>
+                </a>
+                <a href="https://twitter.com/YourTravelPage" class="social-icon twitter" target="_blank">
+                    <i class="fab fa-twitter"></i>
+                </a>
+                <a href="https://youtube.com/YourTravelChannel" class="social-icon youtube" target="_blank">
+                    <i class="fab fa-youtube"></i>
+                </a>
+                <a href="https://tiktok.com/@YourTravelAccount" class="social-icon tiktok" target="_blank">
+                    <i class="fab fa-tiktok"></i>
+                </a>
+                <a href="https://pinterest.com/YourTravelPage" class="social-icon pinterest" target="_blank">
+                    <i class="fab fa-pinterest-p"></i>
+                </a>
+            </div>
+            
+            <div class="social-feed">
+                <!-- Instagram Post -->
+                <div class="social-post">
+                    <div class="social-post-image">
+                        <img src="https://example.com/real-image.jpg" alt="Beautiful sunset in Santorini">
+                    </div>
+                    <div class="social-post-content">
+                        <div class="social-post-header">
+                            <i class="fab fa-instagram" style="color: #e1306c;"></i>
+                            <span class="social-post-platform">Instagram</span>
+                        </div>
+                        <div class="social-post-text">Sunset perfection at Santorini! The white buildings against the blue Aegean Sea create a magical atmosphere. #TravelGoals #Santorini</div>
+                        <div class="social-post-date">2 days ago</div>
+                    </div>
+                </div>
+
+                <!-- Facebook Post -->
+                <div class="social-post">
+                    <div class="social-post-image">
+                        <img src="https://via.placeholder.com/400" alt="Facebook Post">
+                    </div>
+                    <div class="social-post-content">
+                        <div class="social-post-header">
+                            <i class="fab fa-facebook-f" style="color: #3b5998;"></i>
+                            <span class="social-post-platform">Facebook</span>
+                        </div>
+                        <div class="social-post-text">We're excited to announce our upcoming travel guide to the hidden gems of Bali! Who's been to Bali? Share your favorite spots below!</div>
+                        <div class="social-post-date">5 days ago</div>
+                    </div>
+                </div>
+                
+                <!-- Twitter Post -->
+                <div class="social-post">
+                    <div class="social-post-image">
+                        <img src="/api/placeholder/400/400" alt="Twitter Post">
+                    </div>
+                    <div class="social-post-content">
+                        <div class="social-post-header">
+                            <i class="fab fa-twitter" style="color: #1da1f2;"></i>
+                            <span class="social-post-platform">Twitter</span>
+                        </div>
+                        <div class="social-post-text">The Northern Lights in Iceland last night were absolutely breathtaking! Nature's best light show. #AuroraBorealis #Iceland #TravelPhotography</div>
+                        <div class="social-post-date">3 days ago</div>
+                    </div>
+                </div>
+                
+                <!-- YouTube Post -->
+                <div class="social-post">
+                    <div class="social-post-image">
+                        <img src="/api/placeholder/400/400" alt="YouTube Post">
+                    </div>
+                    <div class="social-post-content">
+                        <div class="social-post-header">
+                            <i class="fab fa-youtube" style="color: #ff0000;"></i>
+                            <span class="social-post-platform">YouTube</span>
+                        </div>
+                        <div class="social-post-text">Check out our latest vlog: "A Week in Machu Picchu - Ancient Wonders and Hidden Trails" #MachuPicchu #TravelVlog</div>
+                        <div class="social-post-date">1 week ago</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+    
+    <section id="about">
+        <div class="container">
+            <div class="section-title">
+                <h2>About Our Mission</h2>
+                <p>We're passionate about showcasing Earth's most spectacular places and inspiring your next adventure</p>
+            </div>
+            
+            <div style="text-align: center; max-width: 800px; margin: 0 auto;">
+                <p style="margin-bottom: 1rem;">
+                    Our website was created by travel enthusiasts who believe that exploring our planet's beauty is one of life's greatest joys. We curate and highlight destinations that showcase the incredible diversity of our world - from breathtaking natural landscapes to awe-inspiring human achievements.
+                </p>
+                <p style="margin-bottom: 1rem;">
+                    Each featured destination is carefully selected based on its unique beauty, cultural significance, and the transformative experiences it offers travelers. We provide reliable information, stunning visuals, and practical travel tips to help you plan your journey.
+                </p>
+                <p>
+                    Whether you're an experienced globetrotter or someone dreaming of their first international adventure, we hope our collection inspires you to discover new horizons and create unforgettable memories.
+                </p>
+            </div>
+        </div>
+    </section>
+    
+    <section id="contact">
+        <div class="container">
+            <div class="section-title">
+                <h2>Contact Us</h2>
+                <p>Have questions, suggestions for destinations, or want to share your travel experiences? Get in touch with our team!</p>
+            </div>
+            
+            <form style="max-width: 600px; margin: 0 auto;">
+                <div style="margin-bottom: 1.5rem;">
+                    <label for="name" style="display: block; margin-bottom: 0.5rem; font-weight: 600;">Name</label>
+                    <input type="text" id="name" style="width: 100%; padding: 0.8rem; border: 1px solid #ddd; border-radius: 4px;" placeholder="Your name">
+                </div>
+                
+                <div style="margin-bottom: 1.5rem;">
+                    <label for="email" style="display: block; margin-bottom: 0.5rem; font-weight: 600;">Email</label>
+                    <input type="email" id="email" style="width: 100%; padding: 0.8rem; border: 1px solid #ddd; border-radius: 4px;" placeholder="Your email">
+                </div>
+                
+                <div style="margin-bottom: 1.5rem;">
+                    <label for="message" style="display: block; margin-bottom: 0.5rem; font-weight: 600;">Message</label>
+                    <textarea id="message" style="width: 100%; padding: 0.8rem; border: 1px solid #ddd; border-radius: 4px; min-height: 150px;" placeholder="Your message"></textarea>
+                </div>
+                
+                <button type="submit" class="btn" style="border: none; cursor: pointer; padding: 0.8rem 2rem;">Send Message</button>
+            </form>
+        </div>
+    </section>
+    
+    <footer>
+        <div class="footer-content">
+            <div>
+                <div class="footer-logo">WorldBeauty</div>
+                <p>Showcasing Earth's most beautiful places to inspire your travels</p>
+                
+                <div class="social-icons" style="margin-top: 1rem; justify-content: flex-start;">
+                    <a href="https://facebook.com/YourTravelPage" class="social-icon facebook" target="_blank">
+                        <i class="fab fa-facebook-f"></i>
+                    </a>
+                    <a href="https://instagram.com/YourTravelPage" class="social-icon instagram" target="_blank">
+                        <i class="fab fa-instagram"></i>
+                    </a>
+                    <a href="https://twitter.com/YourTravelPage" class="social-icon twitter" target="_blank">
+                        <i class="fab fa-twitter"></i>
+                    </a>
+                    <a href="https://youtube.com/YourTravelChannel" class="social-icon youtube" target="_blank">
+                        <i class="fab fa-youtube"></i>
+                    </a>
+                    <a href="https://tiktok.com/@YourTravelAccount" class="social-icon tiktok" target="_blank">
+                        <i class="fab fa-tiktok"></i>
+                    </a>
+                    <a href="https://pinterest.com/YourTravelPage" class="social-icon pinterest" target="_blank">
+                        <i class="fab fa-pinterest-p"></i>
+                    </a>
+                </div>
+            </div>
+            
+            <div class="footer-links">
+                <h3>Quick Links</h3>
+                <ul>
+                    <li><a href="#destinations">Destinations</a></li>
+                    <li><a href="#map-section">Interactive Map</a></li>
+                    <li><a href="#social-media-section">Social Media</a></li>
+                    <li><a href="#about">About</a></li>
+                    <li><a href="#contact">Contact</a></li>
+                </ul>
+            </div>
+            
+            <div class="footer-links">
+                <h3>Categories</h3>
+                <ul>
+                    <li><a href="#">Natural Wonders</a></li>
+                    <li><a href="#">Historical Sites</a></li>
+                    <li><a href="#">Cultural Landmarks</a></li>
+                    <li><a href="#">Paradise Beaches</a></li>
+                </ul>
+            </div>
+            
+            <div class="footer-links">
+                <h3>Connect With Us</h3>
+                <ul>
+                    <li><a href="https://facebook.com/YourTravelPage" target="_blank">Facebook</a></li>
+                    <li><a href="https://instagram.com/YourTravelPage" target="_blank">Instagram</a></li>
+                    <li><a href="https://twitter.com/YourTravelPage" target="_blank">Twitter</a></li>
+                    <li><a href="https://youtube.com/YourTravelChannel" target="_blank">YouTube</a></li>
+                    <li><a href="https://tiktok.com/@YourTravelAccount" target="_blank">TikTok</a></li>
+                    <li><a href="https://pinterest.com/YourTravelPage" target="_blank">Pinterest</a></li>
+                </ul>
+            </div>
+        </div>
+        
+        <div class="copyright">
+            &copy; 2025 WorldBeauty. All rights reserved.
+        </div>
+    </footer>
+
+    <script>
+        // Destination data
+        const destinations = [
+            {
+                name: "Santorini",
+                location: "Greece",
+                description: "Famous for its stunning white buildings with blue domes, dramatic cliffs, and breathtaking sunsets over the Aegean Sea.",
+                image: "/api/placeholder/600/400",
+                category: "beaches"
+            },
+            {
+                name: "Northern Lights",
+                location: "Iceland",
+                description: "The magical aurora borealis painting the night sky with vibrant colors in one of the world's most stunning natural light shows.",
+                image: "/api/placeholder/600/400",
+                category: "nature"
+            },
+            {
+                name: "Machu Picchu",
+                location: "Peru",
+                description: "This ancient Incan citadel set high in the Andes Mountains offers mysterious stone structures and breathtaking mountain views.",
+                image: "/api/placeholder/600/400",
+                category: "historical"
+            },
+            {
+                name: "Kyoto",
+                location: "Japan",
+                description: "Home to numerous classical Buddhist temples, gardens, imperial palaces, Shinto shrines and traditional wooden houses.",
+                image: "/api/placeholder/600/400",
+                category: "cultural"
+            },
+            {
+                name: "Grand Canyon",
+                location: "USA",
+                description: "One of the world's most spectacular natural wonders with layered bands of red rock revealing millions of years of geological history.",
+                image: "/api/placeholder/600/400",
+                category: "nature"
+            },
+            {
+                name: "Taj Mahal",
+                location: "India",
+                description: "This ivory-white marble mausoleum is a stunning symbol of eternal love and one of the world's most recognized architectural masterpieces.",
+                image: "/api/placeholder/600/400",
+                category: "historical"
+            },
+            {
+                name: "Bora Bora",
+                location: "French Polynesia",
+                description: "Crystal clear turquoise waters, overwater bungalows, and a stunning lagoon make this island paradise a dream destination.",
+                image: "/api/placeholder/600/400",
+                category: "beaches"
+            },
+            {
+                name: "Petra",
+                location: "Jordan",
+                description: "The ancient city carved into rose-colored stone features elaborate facades and represents a marvel of human ingenuity.",
+                image: "/api/placeholder/600/400",
+                category: "historical"
+            },
+            {
+                name: "Venice",
+                location: "Italy",
+                description: "A city of winding canals, ornate architecture, and romantic gondola rides that seems to float magically on water.",
+                image: "/api/placeholder/600/400",
+                category: "cultural"
+            }
+        ];
+
+        // Create destination cards
+        function createDestinationCards(filterCategory = 'all') {
+            const container = document.getElementById('destinations-container');
+            container.innerHTML = '';
+            
+            const filteredDestinations = filterCategory === 'all' 
+                ? destinations 
+                : destinations.filter(dest => dest.category === filterCategory);
+            
+            filt
